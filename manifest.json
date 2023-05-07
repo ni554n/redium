@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "Redium",
+  "version": "1.0",
+  "description": "Removes paywalls from Medium articles",
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_title": "Remove Paywall using 12ft"
+  },
+  "host_permissions": ["*://*.medium.com/*"],
+  "permissions": ["declarativeNetRequest", "activeTab"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "redirect",
+        "path": "src/rules.json",
+        "enabled": true
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "src/worker.js"
+  }
+}

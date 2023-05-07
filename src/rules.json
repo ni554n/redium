@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "condition": {
+      "//": "Every medium article link has a hash appended like '-abc123efg' at the end. Matching based on that pattern for redirection: https://regex101.com/r/SGNUr2/2",
+      "regexFilter": "^https?:\\/\\/(?:.*\\.)*medium\\.com\\/.+-\\w+(?:\\/.*|\\?.*)?$",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    },
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "https://12ft.io/\\0"
+      }
+    }
+  }
+]
