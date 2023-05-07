@@ -10,19 +10,15 @@
     "128": "assets/icon128.png"
   },
   "action": {
-    "default_title": "Remove Paywall using 12ft"
+    "default_title": "Redirect to 12ft"
   },
   "host_permissions": ["*://*.medium.com/*"],
-  "permissions": ["declarativeNetRequest", "activeTab"],
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "redirect",
-        "path": "src/rules.json",
-        "enabled": true
-      }
-    ]
-  },
+  "permissions": [
+    "declarativeNetRequestWithHostAccess",
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ],
   "background": {
     "service_worker": "src/worker.js"
   }
