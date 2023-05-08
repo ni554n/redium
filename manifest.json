@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Redium",
   "version": "1.0",
-  "description": "Removes paywalls from Medium articles",
+  "description": "Automatically unblock articles through proxies like 12ft, LibMedium, and Scribe",
   "icons": {
     "16": "assets/icon16.png",
     "32": "assets/icon32.png",
