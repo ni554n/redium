@@ -89,10 +89,15 @@ function updateRedirectionRule(service) {
           {
             id: 1,
             condition: {
-              // Every medium article link has a hash appended like '-abc123efg' at the end.
-              // Matching based on that pattern for redirection: https://regex101.com/r/SGNUr2/4
-              // Has to match the full url as it's going to be substituted by "\\0" for 12ft.
-              regexFilter: ".+-\\w+(\\?.*)?$",
+              /**
+               * Pattern playground: https://regex101.com/r/SGNUr2/5
+               *
+               * Matching criteria:
+               * - Exclude "/m", as it is used for 3xx redirection.
+               * - Article ID hash in hex at the end of the url.
+               * - Full url, as it is needed for 12ft.
+               */
+              regexFilter: ".+[^/m]/[^/]+-[0-9a-f]{8,}.*$",
               resourceTypes: ["main_frame"],
             },
             action: {
