@@ -9,9 +9,7 @@
     "48": "assets/icon48.png",
     "128": "assets/icon128.png"
   },
-  "action": {
-    "default_title": "Redirect to 12ft"
-  },
+  "action": {},
   "host_permissions": ["*://*.medium.com/*"],
   "permissions": [
     "declarativeNetRequestWithHostAccess",

@@ -36,6 +36,8 @@ chrome.runtime.onInstalled.addListener(() => {
       /** @type {Service} */
       const service = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
 
+      chrome.action.setTitle({ title: `Redirect to ${service}` });
+
       updateRedirectionRule(service);
 
       chrome.contextMenus.create({
@@ -67,6 +69,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener((info) => {
   const service = /** @type {Service} */ (info.menuItemId);
+
+  chrome.action.setTitle({ title: `Redirect to ${service}` });
 
   updateRedirectionRule(service);
 
