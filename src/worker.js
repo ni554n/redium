@@ -3,11 +3,7 @@
  * @typedef {("12ft" | "LibMedium" | "Scribe")} Service
  */
 
-/**
- * @typedef {Record<Service, { ruleAction: chrome.declarativeNetRequest.Redirect }>} Services
- */
-
-/** @type {Services} */
+/** @type {Readonly<Record<Service, { ruleAction: chrome.declarativeNetRequest.Redirect }>>} */
 const services = Object.freeze({
   "12ft": {
     ruleAction: {
@@ -42,10 +38,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
       updateRedirectionRule(service);
 
-      /** `id` must be any of @type {Service} */
-
       chrome.contextMenus.create({
-        id: "12ft",
+        id: /** @satisfies {Service} */ ("12ft"),
         title: "12ft",
         contexts: ["action"],
         type: "radio",
@@ -53,7 +47,7 @@ chrome.runtime.onInstalled.addListener(() => {
       });
 
       chrome.contextMenus.create({
-        id: "LibMedium",
+        id: /** @satisfies {Service} */ ("LibMedium"),
         title: "LibMedium",
         contexts: ["action"],
         type: "radio",
@@ -61,7 +55,7 @@ chrome.runtime.onInstalled.addListener(() => {
       });
 
       chrome.contextMenus.create({
-        id: "Scribe",
+        id: /** @satisfies {Service} */ ("Scribe"),
         title: "Scribe",
         contexts: ["action"],
         type: "radio",
@@ -88,30 +82,27 @@ chrome.contextMenus.onClicked.addListener((info) => {
  */
 function updateRedirectionRule(service) {
   chrome.declarativeNetRequest
-    .updateDynamicRules({
-      removeRuleIds: [1],
-    })
-    .catch(console.error);
-
-  chrome.declarativeNetRequest
-    .updateDynamicRules({
-      addRules: [
-        {
-          id: 1,
-          condition: {
-            // Every medium article link has a hash appended like '-abc123efg' at the end.
-            // Matching based on that pattern for redirection: https://regex101.com/r/SGNUr2/4
-            // Has to match the full url as it's going to be substituted by "\\0" for 12ft.
-            regexFilter: ".+-\\w+(\\?.*)?$",
-            resourceTypes: ["main_frame"],
+    .updateDynamicRules({ removeRuleIds: [1] })
+    .then(() =>
+      chrome.declarativeNetRequest.updateDynamicRules({
+        addRules: [
+          {
+            id: 1,
+            condition: {
+              // Every medium article link has a hash appended like '-abc123efg' at the end.
+              // Matching based on that pattern for redirection: https://regex101.com/r/SGNUr2/4
+              // Has to match the full url as it's going to be substituted by "\\0" for 12ft.
+              regexFilter: ".+-\\w+(\\?.*)?$",
+              resourceTypes: ["main_frame"],
+            },
+            action: {
+              type: "redirect",
+              redirect: services[service].ruleAction,
+            },
           },
-          action: {
-            type: "redirect",
-            redirect: services[service].ruleAction,
-          },
-        },
-      ],
-    })
+        ],
+      }),
+    )
     .catch(console.error);
 }
 
