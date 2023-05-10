@@ -2,13 +2,13 @@
 
 <img src="docs/menu.png" align="right" width="150px"/>
 
-Automatically unblock articles through proxies like [12ft](https://12ft.io), [LibMedium](https://libmedium.batsense.net), and [Scribe](https://scribe.rip).
+Automatically unblock medium articles through proxies like [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
 
 However, it **won’t** auto redirect if you are on medium.com webpage so that free articles can be read as usual.
 
 But if you open the article in a new tab, or manually click the extension icon, it'll redirect that webpage to the selected proxy. You can also assign a [keyboard shortcut](chrome://extensions/shortcuts) to trigger redirection.
 
-> 🔥 12ft supports bypassing articles on other websites apart from medium.com.
+> 🔥 12ft supports many websites but it's kinda flaky on medium.com, but it provides the best viewing experience when it works.
 
 ## Installation
 

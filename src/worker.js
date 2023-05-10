@@ -26,7 +26,7 @@ const redirectionRule = Object.freeze({
 });
 
 /** @type {ProxyService} */
-const defaultService = "12ft";
+const defaultService = "Scribe";
 
 const SELECTED_SERVICE_KEY = "selected_proxy";
 
@@ -42,11 +42,11 @@ chrome.runtime.onInstalled.addListener(() => {
       updateRedirectionRule(selectedService);
 
       chrome.contextMenus.create({
-        id: /** @satisfies {ProxyService} */ ("12ft"),
-        title: "12ft",
+        id: /** @satisfies {ProxyService} */ ("Scribe"),
+        title: "Scribe",
         contexts: ["action"],
         type: "radio",
-        checked: selectedService === "12ft",
+        checked: selectedService === "Scribe",
       });
 
       chrome.contextMenus.create({
@@ -58,11 +58,11 @@ chrome.runtime.onInstalled.addListener(() => {
       });
 
       chrome.contextMenus.create({
-        id: /** @satisfies {ProxyService} */ ("Scribe"),
-        title: "Scribe",
+        id: /** @satisfies {ProxyService} */ ("12ft"),
+        title: "12ft",
         contexts: ["action"],
         type: "radio",
-        checked: selectedService === "Scribe",
+        checked: selectedService === "12ft",
       });
     })
     .catch(console.error);
