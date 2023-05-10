@@ -1,81 +1,82 @@
 /**
  * Currently supported proxy services.
- * @typedef {("12ft" | "LibMedium" | "Scribe")} Service
+ * @typedef {("12ft" | "LibMedium" | "Scribe")} ProxyService
  */
 
-/** @type {Readonly<Record<Service, { ruleAction: chrome.declarativeNetRequest.Redirect }>>} */
-const services = Object.freeze({
+/** @type {Readonly<Record<ProxyService, string>>} */
+const domain = Object.freeze({
+  "12ft": "12ft.io",
+  LibMedium: "libmedium.batsense.net",
+  Scribe: "scribe.rip",
+});
+
+/** @type {Readonly<Record<ProxyService, chrome.declarativeNetRequest.Redirect>>} */
+const redirectionRule = Object.freeze({
   "12ft": {
-    ruleAction: {
-      regexSubstitution: "https://12ft.io/\\0",
-    },
+    regexSubstitution: `https://${domain["12ft"]}/\\0`,
   },
 
   LibMedium: {
-    ruleAction: {
-      transform: { host: "libmedium.batsense.net" },
-    },
+    transform: { host: domain.LibMedium },
   },
 
   Scribe: {
-    ruleAction: {
-      transform: { host: "scribe.rip" },
-    },
+    transform: { host: domain.Scribe },
   },
 });
 
-/** @type {Service} */
+/** @type {ProxyService} */
 const defaultService = "12ft";
 
-const SELECTED_SERVICE_KEY = "selected_service";
+const SELECTED_SERVICE_KEY = "selected_proxy";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.local
     .get(SELECTED_SERVICE_KEY)
     .then((kVs) => {
-      /** @type {Service} */
-      const service = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
+      /** @type {ProxyService} */
+      const selectedService = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
 
-      updateActionTitle(service);
+      updateActionTitle(selectedService);
 
-      updateRedirectionRule(service);
+      updateRedirectionRule(selectedService);
 
       chrome.contextMenus.create({
-        id: /** @satisfies {Service} */ ("12ft"),
+        id: /** @satisfies {ProxyService} */ ("12ft"),
         title: "12ft",
         contexts: ["action"],
         type: "radio",
-        checked: service === "12ft",
+        checked: selectedService === "12ft",
       });
 
       chrome.contextMenus.create({
-        id: /** @satisfies {Service} */ ("LibMedium"),
+        id: /** @satisfies {ProxyService} */ ("LibMedium"),
         title: "LibMedium",
         contexts: ["action"],
         type: "radio",
-        checked: service === "LibMedium",
+        checked: selectedService === "LibMedium",
       });
 
       chrome.contextMenus.create({
-        id: /** @satisfies {Service} */ ("Scribe"),
+        id: /** @satisfies {ProxyService} */ ("Scribe"),
         title: "Scribe",
         contexts: ["action"],
         type: "radio",
-        checked: service === "Scribe",
+        checked: selectedService === "Scribe",
       });
     })
     .catch(console.error);
 });
 
 chrome.contextMenus.onClicked.addListener((info) => {
-  const service = /** @type {Service} */ (info.menuItemId);
+  const selectedService = /** @type {ProxyService} */ (info.menuItemId);
 
-  chrome.action.setTitle({ title: `Redirect to ${service}` });
+  chrome.action.setTitle({ title: `Redirect to ${selectedService}` });
 
-  updateRedirectionRule(service);
+  updateRedirectionRule(selectedService);
 
   chrome.storage.local
-    .set({ [SELECTED_SERVICE_KEY]: service })
+    .set({ [SELECTED_SERVICE_KEY]: selectedService })
     .catch(console.error);
 });
 
@@ -83,29 +84,30 @@ chrome.runtime.onStartup.addListener(() => updateActionTitle());
 chrome.management.onEnabled.addListener(() => updateActionTitle());
 
 /**
- * @param {Service=} service
+ * @param {ProxyService=} selectedService
  */
-function updateActionTitle(service) {
-  if (service) {
-    chrome.action.setTitle({ title: `Redirect to ${service}` });
-  } else {
-    chrome.storage.local
-      .get(SELECTED_SERVICE_KEY)
-      .then((kVs) =>
-        chrome.action.setTitle({
-          title: `Redirect to ${kVs[SELECTED_SERVICE_KEY]}`,
-        }),
-      )
-      .catch(console.error);
+function updateActionTitle(selectedService) {
+  if (selectedService) {
+    chrome.action.setTitle({ title: `Redirect to ${selectedService}` });
+    return;
   }
+
+  chrome.storage.local
+    .get(SELECTED_SERVICE_KEY)
+    .then((kVs) =>
+      chrome.action.setTitle({
+        title: `Redirect to ${kVs[SELECTED_SERVICE_KEY]}`,
+      }),
+    )
+    .catch(console.error);
 }
 
 /**
  * Updates declarativeNetRequest dynamic rules according to the selected service.
  *
- * @param {Service} service
+ * @param {ProxyService} selectedService
  */
-function updateRedirectionRule(service) {
+function updateRedirectionRule(selectedService) {
   chrome.declarativeNetRequest
     .updateDynamicRules({ removeRuleIds: [1] })
     .then(() =>
@@ -127,7 +129,7 @@ function updateRedirectionRule(service) {
             },
             action: {
               type: "redirect",
-              redirect: services[service].ruleAction,
+              redirect: redirectionRule[selectedService],
             },
           },
         ],
@@ -138,18 +140,21 @@ function updateRedirectionRule(service) {
 
 chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get(SELECTED_SERVICE_KEY).then((kVs) => {
-    /** @type {Service} */
-    const service = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
     if (!(tab.url ?? "").startsWith("http")) return;
 
-    const url =
-      service === "12ft"
-        ? `https://12ft.io/${tab.url}`
-        : `https://${services[service].ruleAction.transform.host}${
-            new URL(tab.url ?? "").pathname
-          }`;
+    /** @type {ProxyService} */
+    const selectedService = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
+    const serviceDomain = domain[selectedService];
+
+    const tabUrl = new URL(tab.url);
+
     if (tabUrl.hostname === serviceDomain) return;
 
-    chrome.tabs.update({ url });
+    chrome.tabs.create({
+      url:
+        selectedService === "12ft"
+          ? `https://${serviceDomain}/${tabUrl.href}`
+          : `https://${serviceDomain}${tabUrl.pathname}`,
+    });
   });
 });
