@@ -15,7 +15,8 @@
     "declarativeNetRequestWithHostAccess",
     "activeTab",
     "contextMenus",
-    "storage"
+    "storage",
+    "management"
   ],
   "background": {
     "service_worker": "src/worker.js"

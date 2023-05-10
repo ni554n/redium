@@ -36,7 +36,7 @@ chrome.runtime.onInstalled.addListener(() => {
       /** @type {Service} */
       const service = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
 
-      chrome.action.setTitle({ title: `Redirect to ${service}` });
+      updateActionTitle(service);
 
       updateRedirectionRule(service);
 
@@ -78,6 +78,27 @@ chrome.contextMenus.onClicked.addListener((info) => {
     .set({ [SELECTED_SERVICE_KEY]: service })
     .catch(console.error);
 });
+
+chrome.runtime.onStartup.addListener(() => updateActionTitle());
+chrome.management.onEnabled.addListener(() => updateActionTitle());
+
+/**
+ * @param {Service=} service
+ */
+function updateActionTitle(service) {
+  if (service) {
+    chrome.action.setTitle({ title: `Redirect to ${service}` });
+  } else {
+    chrome.storage.local
+      .get(SELECTED_SERVICE_KEY)
+      .then((kVs) =>
+        chrome.action.setTitle({
+          title: `Redirect to ${kVs[SELECTED_SERVICE_KEY]}`,
+        }),
+      )
+      .catch(console.error);
+  }
+}
 
 /**
  * Updates declarativeNetRequest dynamic rules according to the selected service.
