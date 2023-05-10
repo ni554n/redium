@@ -25,18 +25,11 @@ const redirectionRule = Object.freeze({
   },
 });
 
-/** @type {ProxyService} */
-const defaultService = "Scribe";
-
 const SELECTED_SERVICE_KEY = "selected_proxy";
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local
-    .get(SELECTED_SERVICE_KEY)
-    .then((kVs) => {
-      /** @type {ProxyService} */
-      const selectedService = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
-
+  getSelectedService()
+    .then((selectedService) => {
       updateActionTitle(selectedService);
 
       updateRedirectionRule(selectedService);
@@ -114,11 +107,10 @@ function updateActionTitle(selectedService) {
     return;
   }
 
-  chrome.storage.local
-    .get(SELECTED_SERVICE_KEY)
-    .then((kVs) =>
+  getSelectedService()
+    .then((selectedService) =>
       chrome.action.setTitle({
-        title: `Redirect to ${kVs[SELECTED_SERVICE_KEY]}`,
+        title: `Redirect to ${selectedService}`,
       }),
     )
     .catch(console.error);
@@ -161,11 +153,9 @@ function updateRedirectionRule(selectedService) {
 }
 
 chrome.action.onClicked.addListener((tab) => {
-  chrome.storage.local.get(SELECTED_SERVICE_KEY).then((kVs) => {
+  getSelectedService().then((selectedService) => {
     if (!(tab.url ?? "").startsWith("http")) return;
 
-    /** @type {ProxyService} */
-    const selectedService = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
     const serviceDomain = domain[selectedService];
 
     const tabUrl = new URL(tab.url);
@@ -182,11 +172,10 @@ chrome.action.onClicked.addListener((tab) => {
 });
 
 /**
- *
  * @returns {Promise<ProxyService>}
  */
 async function getSelectedService() {
   const kVs = await chrome.storage.local.get(SELECTED_SERVICE_KEY);
 
-  return kVs[SELECTED_SERVICE_KEY];
+  return kVs[SELECTED_SERVICE_KEY] ?? "Scribe";
 }
