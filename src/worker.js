@@ -42,6 +42,14 @@ chrome.runtime.onInstalled.addListener(() => {
       updateRedirectionRule(selectedService);
 
       chrome.contextMenus.create({
+        id: "auto_redirection_toggle",
+        title: "Auto-redirect medium articles on new tab",
+        contexts: ["action"],
+        type: "checkbox",
+        checked: true,
+      });
+
+      chrome.contextMenus.create({
         id: /** @satisfies {ProxyService} */ ("Scribe"),
         title: "Scribe",
         contexts: ["action"],
@@ -69,15 +77,29 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.contextMenus.onClicked.addListener((info) => {
-  const selectedService = /** @type {ProxyService} */ (info.menuItemId);
+  if (info.menuItemId === "auto_redirection_toggle") {
+    if (info.checked) {
+      getSelectedService().then((selectedService) => {
+        updateRedirectionRule(selectedService);
+      });
+    } else {
+      chrome.declarativeNetRequest.updateDynamicRules({ removeRuleIds: [1] });
+    }
 
-  chrome.action.setTitle({ title: `Redirect to ${selectedService}` });
+    return;
+  }
 
-  updateRedirectionRule(selectedService);
+  if (info.menuItemId in domain) {
+    const selectedService = /** @type {ProxyService} */ (info.menuItemId);
 
-  chrome.storage.local
-    .set({ [SELECTED_SERVICE_KEY]: selectedService })
-    .catch(console.error);
+    chrome.action.setTitle({ title: `Redirect to ${selectedService}` });
+
+    updateRedirectionRule(selectedService);
+
+    chrome.storage.local
+      .set({ [SELECTED_SERVICE_KEY]: selectedService })
+      .catch(console.error);
+  }
 });
 
 chrome.runtime.onStartup.addListener(() => updateActionTitle());
@@ -158,3 +180,13 @@ chrome.action.onClicked.addListener((tab) => {
     });
   });
 });
+
+/**
+ *
+ * @returns {Promise<ProxyService>}
+ */
+async function getSelectedService() {
+  const kVs = await chrome.storage.local.get(SELECTED_SERVICE_KEY);
+
+  return kVs[SELECTED_SERVICE_KEY];
+}
