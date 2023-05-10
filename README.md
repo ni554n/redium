@@ -14,9 +14,9 @@ But if you open the article in a new tab, or manually click the extension icon, 
 
 > I'm in the process of uploading this to the Chrome Web Store. So wait a few days if don't want to install it manually.
 
-1. [Download this repo](https://github.com/ni554n/redium/archive/master.zip) and extract it somewhere permanent.
-2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner.
-3. Click `Load Unpacked` button and select the previously extracted folder.
+1. [Download this repo](https://github.com/ni554n/redium/archive/master.zip) and extract it somewhere permanent
+2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
+3. Click `Load Unpacked` button and select the extracted **_redium-main_** folder
 
 ## Information
 
