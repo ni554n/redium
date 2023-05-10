@@ -140,6 +140,7 @@ chrome.action.onClicked.addListener((tab) => {
   chrome.storage.local.get(SELECTED_SERVICE_KEY).then((kVs) => {
     /** @type {Service} */
     const service = kVs[SELECTED_SERVICE_KEY] ?? defaultService;
+    if (!(tab.url ?? "").startsWith("http")) return;
 
     const url =
       service === "12ft"
@@ -147,6 +148,7 @@ chrome.action.onClicked.addListener((tab) => {
         : `https://${services[service].ruleAction.transform.host}${
             new URL(tab.url ?? "").pathname
           }`;
+    if (tabUrl.hostname === serviceDomain) return;
 
     chrome.tabs.update({ url });
   });
