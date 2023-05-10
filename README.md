@@ -1,6 +1,6 @@
 <h1 align="center"><img src="assets/icon48.png"/><br/>Redium</h1>
 
-<img src="docs/menu.png" align="right" width="150px"/>
+<img src="docs/menu.png" align="right" width="160px"/>
 
 Automatically unblock medium articles through proxies like [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
 
