@@ -25,13 +25,10 @@ const redirectionRule = Object.freeze({
   },
 });
 
-const SELECTED_SERVICE_KEY = "selected_proxy";
-
 chrome.runtime.onInstalled.addListener(() => {
-  getSelectedService()
+  readSelectedService()
     .then((selectedService) => {
       updateActionTitle(selectedService);
-
       updateRedirectionRule(selectedService);
 
       chrome.contextMenus.create({
@@ -69,10 +66,13 @@ chrome.runtime.onInstalled.addListener(() => {
     .catch(console.error);
 });
 
-chrome.contextMenus.onClicked.addListener((info) => {
-  if (info.menuItemId === "auto_redirection_toggle") {
-    if (info.checked) {
-      getSelectedService().then((selectedService) => {
+chrome.contextMenus.onClicked.addListener((menuItem) => {
+  if (menuItem.menuItemId === "auto_redirection_toggle") {
+    const { checked } = menuItem;
+    writeAutoRedirectionToggle(checked);
+
+    if (checked) {
+      readSelectedService().then((selectedService) => {
         updateRedirectionRule(selectedService);
       });
     } else {
@@ -82,16 +82,16 @@ chrome.contextMenus.onClicked.addListener((info) => {
     return;
   }
 
-  if (info.menuItemId in domain) {
-    const selectedService = /** @type {ProxyService} */ (info.menuItemId);
+  if (menuItem.menuItemId in domain) {
+    const selectedService = /** @type {ProxyService} */ (menuItem.menuItemId);
 
     chrome.action.setTitle({ title: `Redirect to ${selectedService}` });
 
-    updateRedirectionRule(selectedService);
+    writeSelectServiceState(selectedService);
 
-    chrome.storage.local
-      .set({ [SELECTED_SERVICE_KEY]: selectedService })
-      .catch(console.error);
+    readAutoRedirectionToggle().then((autoRedirectionToggle) => {
+      if (autoRedirectionToggle) updateRedirectionRule(selectedService);
+    });
   }
 });
 
@@ -107,7 +107,7 @@ function updateActionTitle(selectedService) {
     return;
   }
 
-  getSelectedService()
+  readSelectedService()
     .then((selectedService) =>
       chrome.action.setTitle({
         title: `Redirect to ${selectedService}`,
@@ -153,7 +153,7 @@ function updateRedirectionRule(selectedService) {
 }
 
 chrome.action.onClicked.addListener((tab) => {
-  getSelectedService().then((selectedService) => {
+  readSelectedService().then((selectedService) => {
     if (!(tab.url ?? "").startsWith("http")) return;
 
     const serviceDomain = domain[selectedService];
@@ -171,11 +171,56 @@ chrome.action.onClicked.addListener((tab) => {
   });
 });
 
+const SELECTED_SERVICE_KEY = "selected_proxy";
+
 /**
  * @returns {Promise<ProxyService>}
  */
-async function getSelectedService() {
-  const kVs = await chrome.storage.local.get(SELECTED_SERVICE_KEY);
+async function readSelectedService() {
+  return chrome.storage.local
+    .get(SELECTED_SERVICE_KEY)
+    .then(
+      (kVs) =>
+        /** @type {ProxyService} */ (kVs[SELECTED_SERVICE_KEY]) ?? "Scribe",
+    )
+    .catch((e) => {
+      console.error(e);
+      return "Scribe";
+    });
+}
 
-  return kVs[SELECTED_SERVICE_KEY] ?? "Scribe";
+/**
+ * @param {ProxyService} selectedService
+ */
+async function writeSelectServiceState(selectedService) {
+  chrome.storage.local
+    .set({ [SELECTED_SERVICE_KEY]: selectedService })
+    .catch(console.error);
+}
+
+const AUTO_REDIRECTION_TOGGLE_KEY = "should_redirect";
+
+/**
+ * @returns {Promise<boolean>}
+ */
+async function readAutoRedirectionToggle() {
+  return chrome.storage.local
+    .get(AUTO_REDIRECTION_TOGGLE_KEY)
+    .then(
+      (kVs) =>
+        /** @type {boolean} */ (kVs[AUTO_REDIRECTION_TOGGLE_KEY]) ?? true,
+    )
+    .catch((e) => {
+      console.error(e);
+      return true;
+    });
+}
+
+/**
+ * @param {boolean} toggle
+ */
+async function writeAutoRedirectionToggle(toggle) {
+  chrome.storage.local
+    .set({ [AUTO_REDIRECTION_TOGGLE_KEY]: toggle })
+    .catch(console.error);
 }
