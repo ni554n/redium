@@ -1,4 +1,4 @@
-<h1 align="center"><img src="assets/icon48.png"/><br/>Redium</h1>
+<h1 align="center"><img src="assets/icon128.png" width="56px"/><br/>Redium</h1>
 
 <img src="docs/menu.png" align="right" width="160px"/>
 
