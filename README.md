@@ -1,4 +1,4 @@
-<h1 align="left"><img src="assets/icon128.png" width="48px" style="vertical-align: middle;" /><span style="vertical-align: middle; margin-left: 1rem;">Redium</span><a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src="docs/chrome-web-store-badge.png" width="200px" align="right" /></a></h1>
+<h1 align="center"><img src="assets/icon128.png" width="48px" style="vertical-align: bottom;" ><br />Redium</h1>
 
 <br />
 <div align="center"><img src="docs/marquee.png" width="600px" /></div>
@@ -12,7 +12,9 @@ But if you open the article in a new tab, or manually click the extension icon, 
 
 > 🔥 12ft supports many websites but it's kinda flaky on medium.com, but it provides the best viewing experience when it works.
 
-## Manual Installation
+## Installation
+
+<a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src="docs/chrome-web-store-badge.png" width="200px" align="right" /></a>
 
 1. [Download this repo](https://github.com/ni554n/redium/archive/refs/heads/main.zip) and extract it somewhere permanent
 2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
