@@ -1,6 +1,8 @@
-<h1 align="center"><img src="assets/icon128.png" width="48px"/><br/>Redium</h1>
+<h1 align="left"><img src="assets/icon128.png" width="48px" style="vertical-align: middle;" /><span style="vertical-align: middle; margin-left: 1rem;">Redium</span><a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src="docs/chrome-web-store-badge.png" width="200px" align="right" /></a></h1>
 
-<img src="docs/menu.png" align="right" width="160px"/>
+<br />
+<div align="center"><img src="docs/marquee.png" width="600px" /></div>
+<br />
 
 Automatically unblock medium articles through proxies like [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
 
@@ -10,9 +12,7 @@ But if you open the article in a new tab, or manually click the extension icon, 
 
 > 🔥 12ft supports many websites but it's kinda flaky on medium.com, but it provides the best viewing experience when it works.
 
-## Installation
-
-> I'm in the process of uploading this to the Chrome Web Store. So wait a few days if don't want to install it manually.
+## Manual Installation
 
 1. [Download this repo](https://github.com/ni554n/redium/archive/refs/heads/main.zip) and extract it somewhere permanent
 2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
@@ -20,6 +20,6 @@ But if you open the article in a new tab, or manually click the extension icon, 
 
 ## Information
 
-**Author:** [Nissan Ahmed](https://ni554n.github.io) ([@ni554n](https://twitter.com/ni554n))
+**Author:** [Nissan Ahmed](https://anissan.com) ([@ni554n](https://twitter.com/ni554n))
 
 **Donate:** [PayPal](https://paypal.me/ni554n)
