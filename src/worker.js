@@ -26,17 +26,23 @@ const redirectionRule = Object.freeze({
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  readSelectedService()
-    .then((selectedService) => {
+  chrome.storage.local
+    .get(null)
+    .then((kVs) => {
+      const selectedService =
+        /** @type {ProxyService} */ (kVs[SELECTED_SERVICE_KEY]) ?? "Scribe";
+
       updateActionTitle(selectedService);
       updateRedirectionRule(selectedService);
+
+      chrome.contextMenus.removeAll();
 
       chrome.contextMenus.create({
         id: "auto_redirection_toggle",
         title: "Auto-redirect medium articles on new tab",
         contexts: ["action"],
         type: "checkbox",
-        checked: true,
+        checked: kVs[AUTO_REDIRECTION_TOGGLE_KEY] ?? true,
       });
 
       chrome.contextMenus.create({
