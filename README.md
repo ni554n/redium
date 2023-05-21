@@ -1,7 +1,7 @@
 <h1 align="center"><img src="assets/icon128.png" width="48px" style="vertical-align: bottom;" ><br />Redium</h1>
 
 <br />
-<div align="center"><img src="docs/marquee.png" width="600px" /></div>
+<div align="center"><img src=".docs/marquee.png" width="600px" /></div>
 <br />
 
 Automatically unblock medium articles through proxies like [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
@@ -14,7 +14,7 @@ But if you open the article in a new tab, or manually click the extension icon, 
 
 ## Installation
 
-<a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src="docs/chrome-web-store-badge.png" width="200px" align="right" /></a>
+<a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src=".docs/chrome-web-store-badge.png" width="200px" align="right" /></a>
 
 1. [Download this repo](https://github.com/ni554n/redium/archive/refs/heads/main.zip) and extract it somewhere permanent
 2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
