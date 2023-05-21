@@ -19,6 +19,6 @@
     "management"
   ],
   "background": {
-    "service_worker": "src/worker.js"
+    "service_worker": "dist/worker.js"
   }
 }
