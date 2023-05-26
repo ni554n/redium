@@ -10,15 +10,16 @@ However, it **won’t** auto redirect if you are on medium.com webpage so that f
 
 But if you open the article in a new tab, or manually click the extension icon, it'll redirect that webpage to the selected proxy. You can also assign a [keyboard shortcut](chrome://extensions/shortcuts) to trigger redirection.
 
-> 🔥 12ft supports many websites but it's kinda flaky on medium.com, but it provides the best viewing experience when it works.
+> 🔥 12ft supports many websites other than medium.com but it's kinda hit-or-miss on medium itself. However it provides the best viewing experience when it works.
 
-## Installation
+## Build
 
 <a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src=".docs/chrome-web-store-badge.png" width="200px" align="right" /></a>
 
 1. [Download this repo](https://github.com/ni554n/redium/archive/refs/heads/main.zip) and extract it somewhere permanent
-2. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
-3. Click `Load Unpacked` button and select the extracted **_redium-main_** folder
+2. `cd` into the extracted **_redium-main_** folder and run `npm install` and `npm run build`
+3. Go to [Chrome Extensions](chrome://extensions/) page and enable `Developer Mode` from the top right corner
+4. Click `Load Unpacked` button and select the folder
 
 ## Information
 
