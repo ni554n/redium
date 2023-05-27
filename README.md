@@ -26,3 +26,4 @@ But if you open the article in a new tab, or manually click the extension icon, 
 **Author:** [Nissan Ahmed](https://anissan.com) ([@ni554n](https://twitter.com/ni554n))
 
 **Donate:** [PayPal](https://paypal.me/ni554n)
+<img src="https://ping.anissan.com/?repo=redium" width="0" height="0" align="right">
