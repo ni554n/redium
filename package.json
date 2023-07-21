@@ -3,7 +3,7 @@
     "build": "esbuild --minify src/worker.ts --outfile=dist/worker.js"
   },
   "devDependencies": {
-    "chrome-types": "0.1.196",
-    "esbuild": "^0.17.19"
+    "chrome-types": "0.1.218",
+    "esbuild": "0.18.15"
   }
 }
