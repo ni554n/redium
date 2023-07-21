@@ -8,7 +8,7 @@ Automatically unblock medium articles through proxies like [Scribe](https://scri
 
 However, it **won’t** auto redirect if you are on medium.com webpage so that free articles can be read as usual.
 
-But if you open the article in a new tab, or manually click the extension icon, it'll redirect that webpage to the selected proxy. You can also assign a [keyboard shortcut](chrome://extensions/shortcuts) to trigger redirection.
+But if you open the article in a new tab, or manually click the extension icon, it'll redirect that webpage to the selected proxy. You can also assign a keyboard shortcut for it from chrome://extensions/shortcuts.
 
 > 🔥 12ft supports many websites other than medium.com but it's kinda hit-or-miss on medium itself. However it provides the best viewing experience when it works.
 
