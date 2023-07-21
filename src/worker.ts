@@ -136,6 +136,7 @@ chrome.action.onClicked.addListener((tab: chrome.tabs.Tab) => {
       if (tabUrl.hostname === serviceDomain) return;
 
       chrome.tabs.create({
+        index: tab.index + 1,
         url:
           selectedService === "12ft"
             ? `https://${serviceDomain}/${tabUrl.href}`
