@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "esbuild --minify src/worker.ts --outfile=dist/worker.js"
+    "build": "esbuild --minify src/worker.ts --outfile=dist/worker.js",
+    "zip": "powershell Compress-Archive -Path assets,dist,manifest.json -DestinationPath chrome-web-store.zip"
   },
   "devDependencies": {
     "chrome-types": "0.1.218",
