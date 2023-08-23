@@ -27,5 +27,11 @@
   ],
   "background": {
     "service_worker": "dist/worker.js"
-  }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://webcache.googleusercontent.com/*"],
+      "js": ["dist/webcache.js"]
+    }
+  ]
 }

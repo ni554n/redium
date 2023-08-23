@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "build": "esbuild --minify src/worker.ts --outfile=dist/worker.js",
+    "dev": "esbuild --minify src/*.ts --outdir=dist --watch",
+    "build": "esbuild --minify src/*.ts --outdir=dist",
     "zip": "powershell Compress-Archive -Path assets,dist,manifest.json -DestinationPath chrome-web-store.zip"
   },
   "devDependencies": {
