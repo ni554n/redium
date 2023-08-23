@@ -10,6 +10,13 @@
     "128": "assets/icon128.png"
   },
   "action": {},
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+R"
+      }
+    }
+  },
   "host_permissions": ["*://*.medium.com/*"],
   "permissions": [
     "declarativeNetRequestWithHostAccess",
