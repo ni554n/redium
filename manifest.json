@@ -19,11 +19,11 @@
   },
   "host_permissions": ["*://*.medium.com/*"],
   "permissions": [
-    "declarativeNetRequestWithHostAccess",
     "activeTab",
+    "contentSettings",
     "contextMenus",
-    "storage",
-    "management"
+    "management",
+    "storage"
   ],
   "background": {
     "service_worker": "dist/worker.js"
