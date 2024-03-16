@@ -1,9 +1,9 @@
-<h1 align="center"><img src="assets/icon128.png" width="48px" style="vertical-align: bottom;" ><br />Redium</h1>
+<h1 align="center"><img alt="Redium Icon" src="assets/icon128.png" width="48px" style="vertical-align: bottom;" ><br />Redium</h1>
 
 <div align="center"><a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img alt="Chrome Web Store Users" src="https://img.shields.io/chrome-web-store/users/aapiedkipcbeplicbbicchmdmpinhjdl?logo=googlechrome&logoColor=white&label=chrome%20web%20store&labelColor=%2335363a&color=%23ffbe41"></a></div>
 
 <br />
-<div align="center"><img src="./.doc/marquee.png" width="600px" /></div>
+<div align="center"><img alt="Redium Banner" src="./.doc/marquee.png" width="600px" /></div>
 <br />
 
 Automatically unblock medium articles through proxies like [Google Web Cache](https://webcache.googleusercontent.com), [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
@@ -14,7 +14,7 @@ However, it auto-redirects only if you open the article in a new tab, or manuall
 
 ## Build
 
-<a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img src="./.doc/chrome-web-store-badge.png" width="200px" align="right" /></a>
+<a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img alt="Install Redium from Chrome Web Store" src="./.doc/chrome-web-store-badge.png" width="200px" align="right" /></a>
 
 1. [Download this repo](https://github.com/ni554n/redium/archive/refs/heads/main.zip) and extract it somewhere permanent
 2. `cd` into the extracted **_redium-main_** folder and run `npm install` and `npm run build`
@@ -39,4 +39,4 @@ However, it auto-redirects only if you open the article in a new tab, or manuall
 **Author:** [Nissan Ahmed](https://anissan.com) ([@ni554n](https://twitter.com/ni554n))
 
 **Donate:** [PayPal](https://paypal.me/ni554n)
-<img src="https://ping.anissan.com/?repo=redium" width="0" height="0" align="right">
+<img alt="Hit Counter" src="https://ping.anissan.com/?repo=redium" width="0" height="0" align="right" aria-hidden="true">
