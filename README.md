@@ -1,5 +1,7 @@
 <h1 align="center"><img src="assets/icon128.png" width="48px" style="vertical-align: bottom;" ><br />Redium</h1>
 
+<div align="center"><a href="https://chrome.google.com/webstore/detail/aapiedkipcbeplicbbicchmdmpinhjdl"><img alt="Chrome Web Store Users" src="https://img.shields.io/chrome-web-store/users/aapiedkipcbeplicbbicchmdmpinhjdl?logo=googlechrome&logoColor=white&label=chrome%20web%20store&labelColor=%2335363a&color=%23ffbe41"></a></div>
+
 <br />
 <div align="center"><img src="./.doc/marquee.png" width="600px" /></div>
 <br />
