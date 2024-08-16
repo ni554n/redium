@@ -6,11 +6,10 @@
 <div align="center"><img alt="Redium Banner" src="./.doc/marquee.png" width="600px" /></div>
 <br />
 
-Automatically unblock medium articles through proxies like [Google Web Cache](https://webcache.googleusercontent.com), [Scribe](https://scribe.rip), [LibMedium](https://libmedium.batsense.net), and [12ft](https://12ft.io).
+Automatically unblock medium articles through proxies like [ReadMedium](https://readmedium.com), [Freedium](https://freedium.cfd), and [Archive.today](https://archive.today).
 
-However, it auto-redirects only if you open the article in a new tab, or manually click the extension icon / `Alt + R`.
-
-> 🔥 Google Web Cache and 12ft can unlock articles on websites other than medium.com. But they may or may not work 100% of the time.
+> [!TIP]
+> Click the extension icon or press `Alt + R` to redirect manually.
 
 ## Build
 
@@ -22,6 +21,11 @@ However, it auto-redirects only if you open the article in a new tab, or manuall
 4. Click `Load Unpacked` button and select the folder
 
 ## Changelog
+
+### v3.0
+
+- Remove proxy services that no longer works
+- Added ReadMedium, Freedium, and Archive.today
 
 ### v2.0
 
