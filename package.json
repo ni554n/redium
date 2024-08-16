@@ -5,7 +5,8 @@
     "zip": "powershell Compress-Archive -Path assets,dist,manifest.json -DestinationPath chrome-web-store.zip"
   },
   "devDependencies": {
-    "chrome-types": "0.1.226",
-    "esbuild": "0.19.2"
+    "chrome-types": "0.1.297",
+    "esbuild": "0.23.0",
+    "prettier": "3.3.3"
   }
 }
