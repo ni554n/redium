@@ -6,7 +6,7 @@
 <div align="center"><img alt="Redium Banner" src="./.doc/marquee.png" width="600px" /></div>
 <br />
 
-Automatically unblock medium articles through proxies like [ReadMedium](https://readmedium.com), [Freedium](https://freedium.cfd), and [Archive.today](https://archive.today).
+<p align="center">Automatically unblock medium articles through proxies such as <a href="https://readmedium.com">ReadMedium</a>, <a href="https://freedium.cfd">Freedium</a>, and <a href="https://archive.today">Archive.today</a>.</p>
 
 > [!TIP]
 > Click the extension icon or press `Alt + R` to redirect manually.
