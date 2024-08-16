@@ -1,15 +1,12 @@
-/* Chrome will run this service worker at start and register the events for later executions. So this worker won't execute top to bottom on every event and the top level variables won't be available later. */
-
-type ProxyService = "GoogleCache" | "12ft" | "LibMedium" | "Scribe";
-
-const AUTO_REDIRECTION_MENU_ID = "auto_redirection_toggle";
+type ProxyService = "ReadMedium" | "Freedium" | "Archive.today";
 
 const domain: Readonly<Record<ProxyService, string>> = {
-  GoogleCache: "webcache.googleusercontent.com",
-  "12ft": "12ft.io",
-  Scribe: "scribe.rip",
-  LibMedium: "libmedium.batsense.net",
+  ReadMedium: "readmedium.com",
+  Freedium: "freedium.cfd",
+  "Archive.today": "archive.today",
 };
+
+const AUTO_REDIRECTION_MENU_ID = "auto_redirection_toggle";
 
 chrome.runtime.onInstalled.addListener(async ({ reason }) => {
   let {
@@ -17,13 +14,12 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     should_redirect: isAutoRedirectionEnabled,
   } = await readStorage();
 
-  if (reason === "update" && selectedService !== defaultValue.selected_proxy) {
+  if (reason === "update") {
+    await chrome.storage.local.remove("selected_proxy");
     selectedService = defaultValue.selected_proxy;
-    writeStorage("selected_proxy", selectedService);
 
-    await chrome.tabs.create({
-      url: "https://github.com/ni554n/redium#changelog",
-    });
+    // TODO: Remove the contentSettings permission on the next update
+    await chrome.contentSettings.javascript.clear({});
   }
 
   chrome.contextMenus.removeAll();
@@ -55,96 +51,77 @@ chrome.runtime.onInstalled.addListener(async ({ reason }) => {
     type: "normal",
   });
 
-  setup(selectedService);
+  init();
 });
 
+/**
+ * Handles the click event on the context menu items.
+ */
 chrome.contextMenus.onClicked.addListener(
-  (menuItem: chrome.contextMenus.OnClickData) => {
+  async (menuItem: chrome.contextMenus.OnClickData) => {
     if (menuItem.menuItemId === AUTO_REDIRECTION_MENU_ID) {
-      const { checked = true } = menuItem;
-
-      writeStorage("should_redirect", checked);
-      return;
+      await writeStorage("should_redirect", menuItem.checked ?? true);
+    } else if (menuItem.menuItemId in domain) {
+      await writeStorage("selected_proxy", menuItem.menuItemId as ProxyService);
     }
 
-    if (menuItem.menuItemId in domain) {
-      const selectedService = menuItem.menuItemId as ProxyService;
-
-      writeStorage("selected_proxy", selectedService);
-      setup(selectedService);
-    }
+    init();
   },
 );
 
-chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
-  if (!tab.url?.startsWith("http")) return;
+chrome.runtime.onStartup.addListener(init);
+chrome.management.onEnabled.addListener(init);
 
-  let tabUrl = new URL(tab.url);
-  tabUrl = reformatMediumUrl(tabUrl) ?? tabUrl;
-
-  const redirectUrl = await selectRedirectUrl(tabUrl);
-
-  const { id: tabId = -1 } = await chrome.tabs.create({
-    index: tab.index + 1,
-    url: redirectUrl,
-  });
-
-  if (redirectUrl.includes(domain.GoogleCache)) {
-    await chrome.storage.session.set({ [tabId]: true });
-  }
-});
-
-chrome.runtime.onStartup.addListener(setup);
-chrome.management.onEnabled.addListener(() => setup());
-
-async function setup(selectedService: ProxyService | undefined = undefined) {
-  if (selectedService) {
-    chrome.tabs.onRemoved[
-      selectedService === "GoogleCache" ? "addListener" : "removeListener"
-    ](async (tabId) => {
-      const kv = await chrome.storage.session.get(`${tabId}`);
-
-      if (kv[tabId]) {
-        await chrome.contentSettings.javascript.set({
-          primaryPattern: `https://${domain.GoogleCache}/*`,
-          setting: "allow",
-        });
-
-        await chrome.storage.session.remove(`${tabId}`);
-      }
-    });
-  }
+async function init() {
+  const {
+    selected_proxy: selectedService,
+    should_redirect: isAutoRedirectionEnabled,
+  } = await readStorage();
 
   chrome.action.setTitle({
     title: `Redirect to ${
       selectedService ?? (await readStorage("selected_proxy"))
     } (Alt + R)`,
   });
+
+  if (isAutoRedirectionEnabled) chrome.tabs.onUpdated.addListener(autoRedirect);
+  else chrome.tabs.onUpdated.removeListener(autoRedirect);
 }
 
-chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+/**
+ * Auto redirects to proxy service if enabled.
+ */
+async function autoRedirect(
+  tabId: number,
+  changeInfo: { status?: chrome.tabs.TabStatus },
+  tab: chrome.tabs.Tab,
+) {
   if (!tab.url || !changeInfo.status) return;
+  if (changeInfo.status !== "loading") return;
+  if (!(await readStorage("should_redirect"))) return;
 
-  if (changeInfo.status === "loading") {
-    const isAutoRedirectionEnabled: boolean = await readStorage(
-      "should_redirect",
-    );
+  // Assumes only medium.com urls will be here as set by host_permissions in manifest.json
+  const tabUrl = new URL(tab.url);
 
-    if (isAutoRedirectionEnabled) {
-      // Assumes only medium.com urls will be here as set by host_permissions in manifest.json
-      const tabUrl = reformatMediumUrl(new URL(tab.url));
-
-      if (!tabUrl) return;
-
-      const redirectUrl = await selectRedirectUrl(tabUrl);
-
-      if (redirectUrl.includes(domain.GoogleCache)) {
-        await chrome.storage.session.set({ [tabId]: true });
-      }
-
-      await chrome.tabs.update(tabId, { url: redirectUrl });
-    }
+  if (!tabUrl.hostname.includes("medium.com")) return;
+  if (
+    tabUrl.pathname.startsWith("/m/") || // Used for 3xx redirection
+    !/^.+-[0-9a-f]{8,}.*$/.test(tabUrl.pathname) // Matches medium post slug hash
+  ) {
+    return;
   }
+
+  await chrome.tabs.update(tabId, { url: await selectRedirectUrl(tabUrl) });
+}
+
+/**
+ * Handles the click event on the extension icon.
+ */
+chrome.action.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
+  if (!tab.url?.startsWith("http")) return;
+
+  const redirectUrl = await selectRedirectUrl(new URL(tab.url));
+  await chrome.tabs.create({ index: tab.index + 1, url: redirectUrl });
 });
 
 async function selectRedirectUrl(tabUrl: URL): Promise<string> {
@@ -154,45 +131,16 @@ async function selectRedirectUrl(tabUrl: URL): Promise<string> {
   if (tabUrl.hostname.includes(serviceDomain)) return tabUrl.href;
 
   switch (selectedService) {
-    case "12ft":
-      return `https://${serviceDomain}/${tabUrl.href}`;
+    case "ReadMedium":
+      return `https://${serviceDomain}/en/${tabUrl.href}`;
 
-    case "GoogleCache": {
-      const { setting } = await chrome.contentSettings.javascript.get({
-        primaryUrl: tabUrl.href,
-      });
-
-      if (setting === "allow") {
-        await chrome.contentSettings.javascript.set({
-          primaryPattern: `https://${domain.GoogleCache}/*`,
-          setting: "block",
-        });
-      }
-
-      return `https://${serviceDomain}/search?q=cache:${tabUrl.href}`;
+    case "Archive.today": {
+      return `https://${serviceDomain}?url=${tabUrl.href}&run=1`;
     }
 
     default:
       return `https://${serviceDomain}${tabUrl.pathname}`;
   }
-}
-
-function reformatMediumUrl(tabUrl: URL): URL | undefined {
-  if (
-    !tabUrl.hostname.includes("medium.com") ||
-    // Used for 3xx redirection
-    tabUrl.pathname.startsWith("/m/") ||
-    !/^.+-[0-9a-f]{8,}.*$/.test(tabUrl.pathname)
-  ) {
-    return;
-  }
-
-  // Sometimes URLs with query params results in cache not found error on Google Cache
-  for (const key of tabUrl.searchParams.keys()) {
-    tabUrl.searchParams.delete(key);
-  }
-
-  return tabUrl;
 }
 
 /* Storage Helpers */
@@ -203,7 +151,7 @@ type LocalKv = {
 };
 
 const defaultValue: Readonly<LocalKv> = {
-  selected_proxy: "GoogleCache",
+  selected_proxy: "ReadMedium",
   should_redirect: true,
 };
 
@@ -219,6 +167,9 @@ async function readStorage(key?: keyof LocalKv) {
   return kVs;
 }
 
-function writeStorage<K extends keyof LocalKv>(key: K, value: LocalKv[K]) {
-  chrome.storage.local.set({ [key]: value }).catch(console.error);
+async function writeStorage<K extends keyof LocalKv>(
+  key: K,
+  value: LocalKv[K],
+) {
+  await chrome.storage.local.set({ [key]: value });
 }

@@ -1,11 +1,4 @@
 {
-    "words": [
-        "batsense",
-        "googleusercontent",
-        "iframes",
-        "libmedium",
-        "outdir",
-        "Redium",
-        "webcache"
-    ]
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "words": ["Freedium", "outdir", "readmedium", "Redium"]
 }
