@@ -79,9 +79,7 @@ async function init() {
   } = await readStorage();
 
   chrome.action.setTitle({
-    title: `Redirect to ${
-      selectedService ?? (await readStorage("selected_proxy"))
-    } (Alt + R)`,
+    title: `Redirect to ${selectedService} (Alt + R)`,
   });
 
   if (isAutoRedirectionEnabled) chrome.tabs.onUpdated.addListener(autoRedirect);
